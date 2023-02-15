@@ -1,0 +1,15 @@
+{
+  "name": "drf-axios-middleware",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {},
+  "devDependencies": {
+    "@singularit/eslint-config": "1.2.0-beta.5",
+    "eslint": "^8.31.0",
+    "vite": "^4.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.2.2"
+  }
+}
