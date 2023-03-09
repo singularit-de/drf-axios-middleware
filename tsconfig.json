@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "moduleResolution": "node16",
+    "types": ["node", "jest"],
+    "strict": true,
     "target": "es5",
-    "sourceMap": true
+    "sourceMap": true,
+    "outDir": "./dist"
   },
 "include": [
     "src/**/*"

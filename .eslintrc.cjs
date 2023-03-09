@@ -1,3 +1,3 @@
 module.exports = {
-    extends: "@singularit"
+    extends: "@singularit/eslint-config-typescript"
 }
