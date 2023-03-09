@@ -26,22 +26,26 @@ interface NotExact {
   exact?: never
 }
 
-export interface FilterSetRangeLT<T> extends NotExact {
+interface NotStartsWith {
+  startswith?: never
+}
+
+export interface FilterSetRangeLT<T> extends NotExact, NotStartsWith {
   lte?: never
   lt?: T
 }
 
-export interface FilterSetRangeLTE<T> extends NotExact {
+export interface FilterSetRangeLTE<T> extends NotExact, NotStartsWith {
   lte?: T
   lt?: never
 }
 
-export interface FilterSetRangeGT<T> extends NotExact {
+export interface FilterSetRangeGT<T> extends NotExact, NotStartsWith {
   gte?: never
   gt?: T
 }
 
-export interface FilterSetRangeGTE<T> extends NotExact {
+export interface FilterSetRangeGTE<T> extends NotExact, NotStartsWith {
   gte?: T
   gt?: never
 
