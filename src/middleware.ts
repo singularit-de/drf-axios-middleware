@@ -1,33 +1,6 @@
-import type {Axios, AxiosInstance} from 'axios'
-import type {DRFAxiosConfig, FilterSetConfig} from './types.js'
-
-function addFilterKey(object: unknown, key: string, value: any) {
-  // @ts-expect-error we don't know the type at this point
-  object[key] = value
-}
-
-/**
- *
- * @param config
- */
-export function convertFilterSetConfig(config: FilterSetConfig<any, any, any>) {
-  const conversion = {}
-  for (const key in config) {
-    const entry = config[key]
-    if ('value' in entry) { // plain filter
-      addFilterKey(conversion, key, entry.value)
-    }
-    else { // custom or complex filter
-      for (const filterSuffix in entry) {
-        const filterKey = `${key}__${filterSuffix}`
-        // @ts-expect-error can be any type
-        const filterValue = entry[filterSuffix]
-        addFilterKey(conversion, filterKey, filterValue)
-      }
-    }
-  }
-  return conversion
-}
+import type {AxiosInstance} from 'axios'
+import type {CustomKeyConfig, DRFAxiosConfig, FSKeyConfig, Filter, FilterHandler, FilterSetConfig} from './types'
+import {DRFFilters} from './types'
 
 /**
  * The default config
@@ -35,6 +8,77 @@ export function convertFilterSetConfig(config: FilterSetConfig<any, any, any>) {
 const defaultConfig: DRFAxiosConfig = {
   filterKey: 'filterSet',
 
+  filterHandlers: undefined,
+
+}
+
+/**
+ *Convenience method to set a filter key.
+ *
+ * @param object
+ * @param key
+ * @param value
+ */
+function addFilterKey(object: Record<string, unknown>, key: string, value: unknown) {
+  object[key] = value
+}
+
+/**
+ *
+ * @param key
+ * @param data
+ * @param filterHandlers
+ */
+function parseFilters(key: string, data: Record<string, any>, filterHandlers?: Record<string, FilterHandler>): Array<Filter> {
+  const filters: Array<Filter> = []
+  for (const filterSuffix in data) {
+    if ('value' in data) { // plain filter
+      filters.push({key, value: data.value})
+    }
+    else if (filterHandlers && (filterSuffix in filterHandlers)) {
+      // user set a custom handler for this key, so we give him the data and expect him to return a valid filter.
+      filterHandlers[filterSuffix](filterSuffix, data).forEach((filter) => {
+        filters.push({key: `${key}__${filter.key}`, value: filter.value})
+      })
+    }
+    else {
+      const filterValue = data[filterSuffix]
+      if (
+        !DRFFilters.includes(filterSuffix) // if the filter is part of the drf-filters we can just append it as we know how to handle these
+          && !Array.isArray(filterValue) // arrays are objects as well, but we don't want to go deeper into them as we know how to handle these
+          && typeof filterValue === 'object') {
+        // got some more parsing to do
+        parseFilters(filterSuffix, filterValue as Record<string, unknown>, filterHandlers).forEach((filter) => {
+          filters.push({key: `${key}__${filter.key}`, value: filter.value})
+        })
+      }
+      else {
+        // no complex objects just plain filters
+        const filterKey = `${key}__${filterSuffix}`
+        filters.push({key: filterKey, value: filterValue})
+      }
+    }
+  }
+  return filters
+}
+
+/**
+ *
+ * @param config
+ * @param filterSetHandlers
+ */
+export function convertFilterSetConfig<D, K extends FSKeyConfig<D> | null, C extends CustomKeyConfig | null>(
+  config: FilterSetConfig<D, K, C>,
+  filterSetHandlers?: Record<string, FilterHandler>,
+) {
+  const conversion = {}
+  for (const key in config) {
+    const entry = config[key]
+    parseFilters(key, entry, filterSetHandlers).forEach((filter) => {
+      addFilterKey(conversion, filter.key, filter.value)
+    })
+  }
+  return conversion
 }
 
 export const applyDRFInterceptor = (axios: AxiosInstance, options: DRFAxiosConfig = defaultConfig) => {
@@ -48,13 +92,10 @@ export const applyDRFInterceptor = (axios: AxiosInstance, options: DRFAxiosConfi
             const filterSet = params[key]
             if (filterSet) {
               delete params[key]
-              const filterSetParams = convertFilterSetConfig(filterSet as FilterSetConfig<any>)
+              const filterSetParams = convertFilterSetConfig(filterSet as FilterSetConfig, options.filterHandlers)
               config.params = {...params, ...filterSetParams}
               break
             }
-          }
-          else {
-            // TODO if there is no filter key then we assume that the FilterSetConfig is given per request as an additional parameter to the config
           }
         }
       }

@@ -1,19 +1,39 @@
-export interface FilterSetExact<F> {
+export const DRFFilters = ['in', 'exact', 'lt', 'gt', 'lte', 'gte', 'startswith', 'endswith']
+
+/**
+ *
+ */
+interface NotIn {
+  in?: never
+}
+
+interface NotExact {
+  exact?: never
+}
+
+export interface FilterSetExact<F> extends NotIn {
   exact: F
   startswith?: never
+  endswith?: never
   lte?: never
   gte?: never
   lt?: never
   gt?: never
 }
 
-export interface FilterSetStartsWith<F> {
-  exact?: never
-  startswith?: F
+export interface FilterSetIn<F> extends NotExact {
+  startswith?: never
+  endswith?: never
+  in: Array<F>
   lte?: never
   gte?: never
   lt?: never
   gt?: never
+}
+
+export interface FilterSetAffix<F> extends NotExact, NotIn {
+  startswith?: F
+  endswith?: F
 }
 
 type FilterSetRange<T> =
@@ -22,47 +42,43 @@ type FilterSetRange<T> =
     | (FilterSetRangeGT<T> & FilterSetRangeLTE<T>) | (FilterSetRangeGT<T> & FilterSetRangeLT<T>)
     | (FilterSetRangeGTE<T> & FilterSetRangeLTE<T>) | (FilterSetRangeGTE<T> & FilterSetRangeLT<T>)
 
-interface NotExact {
-  exact?: never
-}
-
-interface NotStartsWith {
-  startswith?: never
-}
-
-export interface FilterSetRangeLT<T> extends NotExact, NotStartsWith {
+export interface FilterSetRangeLT<T> extends FilterSetAffix<T> {
   lte?: never
   lt?: T
 }
 
-export interface FilterSetRangeLTE<T> extends NotExact, NotStartsWith {
+export interface FilterSetRangeLTE<T> extends FilterSetAffix<T> {
   lte?: T
   lt?: never
 }
 
-export interface FilterSetRangeGT<T> extends NotExact, NotStartsWith {
+export interface FilterSetRangeGT<T> extends FilterSetAffix<T> {
   gte?: never
   gt?: T
 }
 
-export interface FilterSetRangeGTE<T> extends NotExact, NotStartsWith {
+export interface FilterSetRangeGTE<T> extends FilterSetAffix<T> {
   gte?: T
   gt?: never
 
 }
 
-type FilterSet<T> = FilterSetRange<T> | FilterSetExact<T> | FilterSetStartsWith<T>
+/**
+ * all FilterSets
+ */
+type FilterSet<T> = FilterSetRange<T> | FilterSetExact<T> | FilterSetAffix<T> | FilterSetIn<T>
 
 // Config to exclude certain filters and enable custom filters
-type FSKeyConfig<D> = Partial<Record<keyof D, string>>
+export type FSKeyConfig<D> = Partial<Record<keyof D, string>>
 
-type CustomKeyConfig = {[key: string]: any}
+export type CustomKeyConfig = {[key: string]: unknown}
 & {
   [key in keyof FilterSet<unknown>]?: never
 }
 
-type AllowedFSKeys<D, K extends FSKeyConfig<D>, key extends keyof D> =
-    K[key] extends (string | number | symbol) ? Partial<Record<K[key], D[key]>> : never
+type AllowedFSKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig | null> =
+    // we exclude the types from the custom config because they are defined there. If not they might allow wrong types
+        (Exclude<K[key], keyof C> extends (string | number | symbol) ? Partial<Record<Exclude<K[key], keyof C>, D[key]>> : never)
 
 type ConfiguredCustomKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig> =
     Extract<keyof C, K[key] extends (string | number | symbol) ? K[key] : never>
@@ -73,7 +89,7 @@ type CustomKey<D, K extends FSKeyConfig<D>, key extends keyof D, C extends Custo
           ConfiguredCustomKeys<D, K, key, C> //
           , C[ConfiguredCustomKeys<D, K, key, C>]
       >
-  >
+>
 
 type CheckCustomKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig | null> =
   C extends null ?
@@ -88,7 +104,7 @@ type CheckConfigKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends
     key extends keyof K ? // check if there is a FSKeyConfig
         (
           CheckCustomKeys<D, K, key, C>
-          | AllowedFSKeys<D, K, key> // every key that is defined in the config is allowed
+          | AllowedFSKeys<D, K, key, C> // every key that is defined in the config is allowed
         )
       : FilterSet<D[key]> // no config for the key so we take the default combinations
 
@@ -99,9 +115,30 @@ export type FilterSetConfig<D = Record<any, any>, K extends FSKeyConfig<D> | nul
     K extends null ? // check if we have a config
       FilterSet<D[key]> // no config so we take the default combinations for each key
       : CheckConfigKeys<D, Exclude<K, null>, key, C> // check if key is inside the config
+  ) | (
+    D[key] extends Record<any, any> ? // check if the type of the key is a Record, so we add extended references
+      FilterSetConfig<D[key]>
+      : never // no types added otherwise
   )
 }
 
+/**
+ * Internal Representation of a Filter
+ */
+export interface Filter {
+  key: string
+  value: unknown
+}
+
+/**
+ *  @param key: the defined key
+ *  @param data: the enclosing data containing the data of the key as well as other data on the same hierarchy
+ */
+export type FilterHandler = (key: string, data: unknown) => Array<Filter>
+
+/**
+ *
+ */
 export interface DRFAxiosConfig {
 
   /** The name of the key where one can put their FilterSetConfig under.
@@ -109,5 +146,10 @@ export interface DRFAxiosConfig {
    *
    */
   filterKey: string
+
+  /**
+   * A Record which contains for a filter the custom filter handler
+   */
+  filterHandlers?: Record<string, FilterHandler>
 
 }
