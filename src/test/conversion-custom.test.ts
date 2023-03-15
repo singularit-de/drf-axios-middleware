@@ -1,4 +1,4 @@
-import {applyDRFInterceptor, convertFilterSetConfig} from '../middleware'
+import {convertFilterSetConfig} from '../middleware'
 import type {FilterSetConfig} from '../types'
 
 interface Data {
@@ -17,15 +17,16 @@ interface CustomObject {
 }
 
 interface CustomFilter {
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   custom1: any[]
-  custom2: CustomObject
+  custom2: number
+  custom3: CustomObject
 
 }
 
 interface CustomFilterSetMapping {
   number: 'exact' | 'lte' | 'lt' | 'gt' | 'custom1'
-  text: 'lt' | 'exact' | 'custom2'
+  text: 'lt' | 'exact' | 'custom2' | 'custom3'
 }
 
 test('it should accept a KeyConfig ', () => {
@@ -39,46 +40,44 @@ test('it should accept a KeyConfig ', () => {
 })
 
 test('it should accept a CustomKeyConfig ', () => {
-  const customObject: CustomObject = {attribute: ''}
   const simpleConfig: FilterSetConfig<Data, CustomFilterSetMapping, CustomFilter> = {
     number: {custom1: ['']},
-    text: {custom2: customObject},
+    text: {custom2: 123},
   }
   const converted = convertFilterSetConfig(simpleConfig)
   // eslint-disable-next-line camelcase
-  expect(converted).toEqual({number__custom1: [''], text__custom2: customObject})
+  expect(converted).toEqual({number__custom1: [''], text__custom2: 123})
 })
 
 test('it should accept a CustomKeyConfig and standard DRF filters', () => {
-  const customObject = {attribute: ''}
   const simpleConfig: FilterSetConfig<Data, CustomFilterSetMapping, CustomFilter> = {
     number: {custom1: [''], exact: 123},
-    text: {custom2: customObject, lt: 'foo'},
+    text: {custom2: 123, lt: 'foo'},
   }
   const converted = convertFilterSetConfig(simpleConfig)
   // eslint-disable-next-line camelcase
-  expect(converted).toEqual({number__custom1: [''], number__exact: 123, text__custom2: customObject, text__lt: 'foo'})
+  expect(converted).toEqual({number__custom1: [''], number__exact: 123, text__custom2: 123, text__lt: 'foo'})
 })
 
 test('it should convert the filter defined with a custom filter handler', () => {
-  const customObject = {attribute: ''}
+  const obj = {attribute: ''}
   const simpleConfig: FilterSetConfig<Data, CustomFilterSetMapping, CustomFilter> = {
     number: {custom1: [''], exact: 123},
-    text: {custom2: customObject, lt: 'foo'},
+    text: {custom3: obj, lt: 'foo'},
   }
   const converted = convertFilterSetConfig(simpleConfig, {
-    custom1: (key, data) => {
+    custom1: (_key, _data) => {
       return [{key: 'handler', value: 987}]
     },
-    custom2: (key, data) => {
+    custom3: (key, data) => {
       const list = []
-      if (data && 'attribute' in data)
-        list.push({key: 'custom', value: data.attribute})
+      if (data && data[key] && 'attribute' in data[key])
+        list.push({key: 'custom', value: data[key]})
 
       return list
     },
   })
   // eslint-disable-next-line camelcase
-  expect(converted).toEqual({number__handler: 987, number__exact: 123, text__custom: '', text__lt: 'foo'})
+  expect(converted).toEqual({number__handler: 987, number__exact: 123, text__custom: obj, text__lt: 'foo'})
 })
 

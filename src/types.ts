@@ -69,9 +69,11 @@ export interface FilterSetRangeGTE<T> extends FilterSetAffix<T> {
 type FilterSet<T> = FilterSetRange<T> | FilterSetExact<T> | FilterSetAffix<T> | FilterSetIn<T>
 
 // Config to exclude certain filters and enable custom filters
-export type FSKeyConfig<D> = Partial<Record<keyof D, string>>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FSKeyConfig<D> = Partial<Record<keyof D, any>>
 
-export type CustomKeyConfig = {[key: string]: unknown}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CustomKeyConfig = Record<any, any>
 & {
   [key in keyof FilterSet<unknown>]?: never
 }
@@ -108,6 +110,7 @@ type CheckConfigKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends
         )
       : FilterSet<D[key]> // no config for the key so we take the default combinations
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FilterSetConfig<D = Record<any, any>, K extends FSKeyConfig<D> | null = null, C extends CustomKeyConfig | null = null> = {
   [key in keyof D]:
   {value: D[key]} // no filters apply
@@ -116,8 +119,11 @@ export type FilterSetConfig<D = Record<any, any>, K extends FSKeyConfig<D> | nul
       FilterSet<D[key]> // no config so we take the default combinations for each key
       : CheckConfigKeys<D, Exclude<K, null>, key, C> // check if key is inside the config
   ) | (
-    D[key] extends Record<any, any> ? // check if the type of the key is a Record, so we add extended references
-      FilterSetConfig<D[key]>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    D[key] extends (Record<any, any> | undefined) ? // check if the type of the key is a Record, so we add extended references
+        (key extends keyof K ?
+          FilterSetConfig<D[key], K[key]>
+          : FilterSetConfig<D[key]>)
       : never // no types added otherwise
   )
 }
@@ -134,7 +140,8 @@ export interface Filter {
  *  @param key: the defined key
  *  @param data: the enclosing data containing the data of the key as well as other data on the same hierarchy
  */
-export type FilterHandler = (key: string, data: unknown) => Array<Filter>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FilterHandler = (key: string, data: any) => Array<Filter>
 
 /**
  *

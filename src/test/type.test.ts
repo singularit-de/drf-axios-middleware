@@ -37,7 +37,7 @@ test('Error when attribute has the wrong type', () => {
     text: {value: 123},
   }
   const converted = convertFilterSetConfig(simpleConfig)
-  expect(converted).toEqual({text: 'string'})
+  expect(converted).toEqual({text: 123})
 })
 
 interface FilterSetMapping {
@@ -59,6 +59,7 @@ test('error when filter key is disallowed in mapping', () => {
 })
 
 interface CustomFilter {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   custom1: any[]
   custom2: number
 }
@@ -78,6 +79,18 @@ test('error when custom filter key is not allowed', () => {
   const converted = convertFilterSetConfig(simpleConfig)
   // eslint-disable-next-line camelcase
   expect(converted).toEqual({text__custom1: ''})
+})
+
+test('error when custom has the wrong type', () => {
+  const simpleConfig: FilterSetConfig<Data, FilterSetMappingCustom, CustomFilter> = {
+    text: {
+      // @ts-expect-error custom filter has wrong type
+      custom2: '',
+    },
+  }
+  const converted = convertFilterSetConfig(simpleConfig)
+  // eslint-disable-next-line camelcase
+  expect(converted).toEqual({text__custom2: ''})
 })
 
 test('error when custom has the wrong type', () => {
