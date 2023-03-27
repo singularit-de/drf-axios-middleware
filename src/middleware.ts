@@ -6,10 +6,7 @@ import {DRFFilters} from './types'
  * The default config
  */
 const defaultConfig: DRFAxiosConfig = {
-  filterKey: 'filterSet',
-
   filterHandlers: undefined,
-
 }
 
 /**
@@ -85,18 +82,10 @@ export const applyDRFInterceptor = (axios: AxiosInstance, options: DRFAxiosConfi
   axios.interceptors.request.use(
     (config) => {
       if (config.method === 'get') {
-        const params = config.params
-        for (const key in params) {
-          // check for FilterSetConfig
-          if (params[key] instanceof Object && key === options.filterKey) {
-            const filterSet = params[key]
-            if (filterSet) {
-              delete params[key]
-              const filterSetParams = convertFilterSetConfig(filterSet as FilterSetConfig, options.filterHandlers)
-              config.params = {...params, ...filterSetParams}
-              break
-            }
-          }
+        const filterSet = config.filter
+        if (filterSet) {
+          const filterSetParams = convertFilterSetConfig(filterSet as FilterSetConfig, options.filterHandlers)
+          config.params = {...config.params, ...filterSetParams}
         }
       }
       return config

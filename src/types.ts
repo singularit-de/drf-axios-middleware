@@ -148,12 +148,6 @@ export type FilterHandler = (key: string, data: any) => Array<Filter>
  */
 export interface DRFAxiosConfig {
 
-  /** The name of the key where one can put their FilterSetConfig under.
-   * This is needed to not coincidentally convert data that is not meant to be converted with this middleware.
-   *
-   */
-  filterKey: string
-
   /**
    * A Record which contains for a filter the custom filter handler
    */

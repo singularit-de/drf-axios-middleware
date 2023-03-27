@@ -5,12 +5,13 @@
     "strict": true,
     "target": "es5",
     "sourceMap": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "declaration": true,
   },
-"include": [
+  "include": [
     "src/**/*"
-],
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
   ]
 }
