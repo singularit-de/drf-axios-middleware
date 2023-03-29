@@ -82,10 +82,10 @@ export const applyDRFInterceptor = (axios: AxiosInstance, options: DRFAxiosConfi
   axios.interceptors.request.use(
     (config) => {
       if (config.method === 'get') {
-        const filterSet = config.filter
+        const filterSet = config.filterSet
         if (filterSet) {
           const filterSetParams = convertFilterSetConfig(filterSet as FilterSetConfig, options.filterHandlers)
-          config.params = {...config.params, ...filterSetParams}
+          config.params = {...filterSetParams, ...config.params}
         }
       }
       return config

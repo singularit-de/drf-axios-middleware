@@ -23,7 +23,7 @@ test('it should be converted on success', (done) => {
     text: {lt: 'foo'},
   }
 
-  const filter = simpleConfig
+  const filterSet = simpleConfig
 
   mock.onGet('/success').reply((config) => {
     expect(config.method).toBe('get')
@@ -39,7 +39,7 @@ test('it should be converted on success', (done) => {
       headers: {
         xRequestedWith: 'XMLHttpRequest',
       },
-      filter,
+      filterSet,
     })
     .then((response) => {
       expect(JSON.stringify(response.data)).toBe(JSON.stringify({}))
