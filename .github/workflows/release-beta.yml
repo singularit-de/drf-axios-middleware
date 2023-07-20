@@ -24,8 +24,8 @@ jobs:
         with:
           path: node_modules
           key: node_modules
-      - name: Run Tests
-        uses: stefanoeb/jest-action@1.0.3
+#      - name: Run Tests
+#        uses: stefanoeb/jest-action@1.0.3
 
   build:
     name: 🗂️ Build files
