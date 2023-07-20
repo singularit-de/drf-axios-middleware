@@ -1,12 +1,19 @@
 {
-  "name": "drf-axios-middleware",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@moerlin1337/drf-axios-middleware",
+  "version": "0.0.1",
   "type": "module",
+  "main": "dist/middleware.js",
+  "files": [
+    "dist",
+    "!dist/test",
+    "*.md"
+  ],
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
   },
   "devDependencies": {
     "@singularit/eslint-config-typescript": "^1.2.0",
@@ -20,5 +27,9 @@
   },
   "peerDependencies": {
     "axios": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Moerlin1337/drf-axios-middleware.git"
   }
 }
