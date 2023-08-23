@@ -31,5 +31,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Moerlin1337/drf-axios-middleware.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "tag": "latest"
   }
 }
