@@ -2,17 +2,17 @@
   "name": "@moerlin1337/drf-axios-middleware",
   "version": "0.0.1",
   "type": "module",
-  "main": "dist/middleware.js",
   "files": [
     "dist",
-    "!dist/test",
+    "!dist/**/test",
+    "!dist/**/*.map.js",
     "*.md"
   ],
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsc --build",
+    "build": "tsc --build ./tsconfig.cjs.json ./tsconfig.esm.json ./tsconfig.types.json",
     "clean": "tsc --build --clean"
   },
   "devDependencies": {
@@ -35,5 +35,13 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
     "tag": "latest"
+  },
+  "exports": {
+    ".": {
+      "default": "./dist/esm/middleware.js",
+      "import": "./dist/esm/middleware.js",
+      "require": "./dist/cjs/middleware.js",
+      "types": "./dist/types/middleware.d.ts"
+    }
   }
 }
