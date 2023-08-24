@@ -26,6 +26,7 @@ function addFilterKey(object: Record<string, unknown>, key: string, value: unkno
  * @param data
  * @param filterHandlers
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseFilters(key: string, data: Record<string, any>, filterHandlers?: Record<string, FilterHandler>): Array<Filter> {
   const filters: Array<Filter> = []
   for (const filterSuffix in data) {
@@ -34,7 +35,7 @@ function parseFilters(key: string, data: Record<string, any>, filterHandlers?: R
     }
     else if (filterHandlers && (filterSuffix in filterHandlers)) {
       // user set a custom handler for this key, so we give him the data and expect him to return a valid filter.
-      filterHandlers[filterSuffix](filterSuffix, data).forEach((filter) => {
+      filterHandlers[filterSuffix](filterSuffix, data[filterSuffix], data).forEach((filter) => {
         filters.push({key: `${key}__${filter.key}`, value: filter.value})
       })
     }

@@ -141,7 +141,7 @@ export interface Filter {
  *  @param data: the enclosing data containing the data of the key as well as other data on the same hierarchy
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type FilterHandler = (key: string, data: any) => Array<Filter>
+export type FilterHandler = (key: string, value: any, filter: any) => Array<Filter>
 
 /**
  *
