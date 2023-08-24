@@ -24,8 +24,8 @@ jobs:
         with:
           path: node_modules
           key: node_modules
-#      - name: Run Tests
-#        uses: stefanoeb/jest-action@1.0.3
+      - name: Run Tests
+        uses: stefanoeb/jest-action@1.0.3
 
   build:
     name: 🗂️ Build files
@@ -54,11 +54,10 @@ jobs:
     needs:
       - test
       - build
-#    permissions:
-#      contents: write # to be able to publish a GitHub release
-#      issues: write # to be able to comment on released issues
-#      pull-requests: write # to be able to comment on released pull requests
-#      id-token: write # to enable use of OIDC for npm provenance
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
     steps:
       - name: Checkout
         uses: actions/checkout@v2

@@ -1,14 +1,13 @@
 {
-  "name": "@moerlin1337/drf-axios-middleware",
+  "name": "@singularit/drf-axios-middleware",
   "version": "0.0.1",
   "type": "module",
   "files": [
     "dist",
     "!dist/**/test",
-    "!dist/**/*.map.js",
     "*.md"
   ],
-  "types": "./dist/types/middleware.d.ts",
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
@@ -31,18 +30,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Moerlin1337/drf-axios-middleware.git"
+    "url": "https://github.com/singularit-de/drf-axios-middleware.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "tag": "latest"
+    "access": "public"
   },
   "exports": {
     ".": {
-      "default": "./dist/esm/middleware.js",
-      "import": "./dist/esm/middleware.js",
-      "require": "./dist/cjs/middleware.js",
-      "types": "./dist/types/middleware.d.ts"
+      "default": "./dist/esm/index.js",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
     }
   }
 }
