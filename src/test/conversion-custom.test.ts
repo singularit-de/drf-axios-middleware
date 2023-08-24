@@ -66,10 +66,10 @@ test('it should convert the filter defined with a custom filter handler', () => 
     text: {custom3: obj, lt: 'foo'},
   }
   const converted = convertFilterSetConfig(simpleConfig, {
-    custom1: (_key, _data) => {
+    custom1: (_key, _value) => {
       return [{key: 'handler', value: 987}]
     },
-    custom3: (key, data) => {
+    custom3: (key, value, data) => {
       const list = []
       if (data && data[key] && 'attribute' in data[key])
         list.push({key: 'custom', value: data[key]})
@@ -81,3 +81,15 @@ test('it should convert the filter defined with a custom filter handler', () => 
   expect(converted).toEqual({number__handler: 987, number__exact: 123, text__custom: obj, text__lt: 'foo'})
 })
 
+test('it should convert the filter defined with a custom filter handler with value shortcut', () => {
+  const simpleConfig: FilterSetConfig<Data, CustomFilterSetMapping, CustomFilter> = {
+    number: {custom1: ['1', '4'], exact: 123},
+  }
+  const converted = convertFilterSetConfig(simpleConfig, {
+    custom1: (key, value) => {
+      return [{key, value}]
+    },
+  })
+  // eslint-disable-next-line camelcase
+  expect(converted).toEqual({number__custom1: ['1', '4'], number__exact: 123})
+})

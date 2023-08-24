@@ -1,12 +1,19 @@
 {
-  "name": "drf-axios-middleware",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@singularit/drf-axios-middleware",
+  "version": "0.0.1",
   "type": "module",
+  "files": [
+    "dist",
+    "!dist/**/test",
+    "*.md"
+  ],
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "build": "tsc --build ./tsconfig.cjs.json ./tsconfig.esm.json ./tsconfig.types.json",
+    "clean": "tsc --build --clean"
   },
   "devDependencies": {
     "@singularit/eslint-config-typescript": "^1.2.0",
@@ -20,5 +27,20 @@
   },
   "peerDependencies": {
     "axios": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/singularit-de/drf-axios-middleware.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "default": "./dist/esm/index.js",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
   }
 }

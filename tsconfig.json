@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
     "types": ["node", "jest"],
     "strict": true,
-    "target": "es5",
+    "target": "esnext",
     "sourceMap": true,
-    "outDir": "./dist",
-    "declaration": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
   },
   "include": [
     "src/**/*"
