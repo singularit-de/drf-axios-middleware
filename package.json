@@ -8,6 +8,7 @@
     "!dist/**/*.map.js",
     "*.md"
   ],
+  "types": "./dist/types/middleware.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
