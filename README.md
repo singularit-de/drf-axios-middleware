@@ -25,7 +25,7 @@
 ## Installation
 
 ```bash
-npm install drf-axios-middleware
+npm install @singularit/drf-axios-middleware
 ```
 
 ## Usage
