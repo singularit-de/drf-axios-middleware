@@ -10,6 +10,7 @@ export default defineConfig({
     nav: [
       {text: 'Home', link: '/'},
       {text: 'Docs', link: '/get-started'},
+      {text: 'Imprint', link: 'https://www.singular-it.de/impressum'},
     ],
 
     sidebar: [
