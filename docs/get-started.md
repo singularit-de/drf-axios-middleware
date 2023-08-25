@@ -12,7 +12,7 @@ npm install @singularit/drf-axios-middleware
 introduces a new parameter `filterSet` to the axios request config. This parameter is used to filter the request url.
 The `filterSet` is a object with the following structure:
 
-```js{4}
+```js
 {
   [field]: {
     [operator]: value
@@ -24,7 +24,7 @@ The `filterSet` is a object with the following structure:
 }
 ```
 
-```ts{4}
+```ts
 import axios from 'axios'
 import applyDrfMiddleware from '@singularit/drf-axios-middleware'
 

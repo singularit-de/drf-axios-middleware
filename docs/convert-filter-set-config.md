@@ -5,7 +5,7 @@ to the corresponding object.
 
 ## Example
 
-```ts
+```ts{14}
 import {convertFilterSetConfig, FilterSetConfig} from '@singularit/drf-axios-middleware'
 
 interface Data {

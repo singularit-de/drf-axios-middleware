@@ -3,7 +3,7 @@
 
 ## Apply configuration
 
-```ts{4}
+```ts{5}
 import axios from 'axios';
 import applyDrfMiddleware from '@singularit/drf-axios-middleware';
 
