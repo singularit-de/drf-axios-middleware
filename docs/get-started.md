@@ -9,8 +9,10 @@ npm install @singularit/drf-axios-middleware
 ## Usage Example
 
 `@singularit/drf-axios-middleware` is a middleware for axios. It can be used with axios and django rest framework. It
-introduces a new parameter `filterSet` to the axios request config. This parameter is used to filter the request url.
-The `filterSet` is a object with the following structure:
+introduces a new parameter `filterSet` to the axios request config. This parameter is used to generate a valid params
+for django rest framework.
+
+The `filterSet` is an object with the following structure:
 
 ```js
 {

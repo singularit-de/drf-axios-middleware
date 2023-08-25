@@ -21,5 +21,7 @@ const api = applyDrfMiddleware(axios.create(), {
 
 The `filterHandlers` option can be used to add custom filter operators.
 
+See [Custom Filter Handler](./example-customization.md#custom-filter-handler) for more information.
+
 
 
