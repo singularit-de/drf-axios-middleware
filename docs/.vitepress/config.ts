@@ -4,6 +4,7 @@ import {defineConfig} from 'vitepress'
 export default defineConfig({
   title: 'DRF Axios Middleware',
   description: 'A VitePress Site',
+  base: '/drf-axios-middleware/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

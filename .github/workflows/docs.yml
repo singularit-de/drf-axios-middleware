@@ -1,0 +1,50 @@
+name: 📝 Docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/docs
+
+jobs:
+  build:
+    name: 🗂️ Build files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ secrets.NODE_VERSION }}
+          cache: npm
+      - name: Install node_modules
+        run: npm ci
+      - name: Build Files
+        run: |
+          npm run docs:build
+          touch docs/.vitepress/dist/.nojekyll
+      - uses: actions/upload-pages-artifact@v2
+        if: success()
+        with:
+          path: docs/.vitepress/dist
+  deploy:
+    name: 🚀 Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+    needs:
+      - build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+
+
+
+
+
