@@ -5,7 +5,7 @@ outline: deep
 # Benutzerdefinierte Beispiele
 
 ::: tip
-Die middleware kann durch Übergabe eines Konfigurationsobjekts an die `applyDrfMiddleware` Funktion angepasst werden. Weitere Informationen zu den verfügbaren Optionen finden Sie unter [Konfiguration](./de/configuration.md).
+Die middleware kann durch Übergabe eines Konfigurationsobjekts an die `applyDrfMiddleware` Funktion angepasst werden. Weitere Informationen zu den verfügbaren Optionen finden Sie unter [Konfiguration](./configuration.md).
 :::
 
 ## Benutzerdefinierte Filter-Handler
@@ -22,7 +22,7 @@ const api = applyDrfMiddleware(axios.create(), {
     }
 });
 
-// get all users with id not 1, 2 or 3 
+// alle nutzer mit id != 1, 2 oder 3 
 api.get('/api/v1/users/', {filterSet: {id: {notIn: [1, 2, 3]}}}).then((response) => {
     console.log(response.data);
 });

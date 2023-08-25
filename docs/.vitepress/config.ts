@@ -10,6 +10,7 @@ export default defineConfig({
     nav: [
       {text: 'Home', link: '/'},
       {text: 'Docs', link: '/get-started'},
+      {text: 'Changelogs', link: 'https://github.com/singularit-de/drf-axios-middleware/releases'},
       {text: 'Imprint', link: 'https://www.singular-it.de/impressum'},
     ],
 
@@ -57,6 +58,7 @@ export default defineConfig({
         nav: [
           {text: 'Start', link: '/de'},
           {text: 'Doku', link: '/de/get-started'},
+          {text: 'Changelogs', link: 'https://github.com/singularit-de/drf-axios-middleware/releases'},
           {text: 'Impressum', link: 'https://www.singular-it.de/impressum'},
         ],
 
