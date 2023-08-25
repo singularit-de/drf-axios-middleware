@@ -79,28 +79,28 @@ export type CustomKeyConfig = Record<any, any>
 }
 
 type AllowedFSKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig | null> =
-    // we exclude the types from the custom config because they are defined there. If not they might allow wrong types
-        (Exclude<K[key], keyof C> extends (string | number | symbol) ? Partial<Record<Exclude<K[key], keyof C>, D[key]>> : never)
+// we exclude the types from the custom config because they are defined there. If not they might allow wrong types
+    (Exclude<K[key], keyof C> extends (string | number | symbol) ? Partial<Record<Exclude<K[key], keyof C>, D[key]>> : never)
 
 type ConfiguredCustomKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig> =
     Extract<keyof C, K[key] extends (string | number | symbol) ? K[key] : never>
 
 type CustomKey<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig> =
-  Partial<
-      Record<
-          ConfiguredCustomKeys<D, K, key, C> //
-          , C[ConfiguredCustomKeys<D, K, key, C>]
-      >
->
+    Partial<
+        Record<
+            ConfiguredCustomKeys<D, K, key, C> //
+            , C[ConfiguredCustomKeys<D, K, key, C>]
+        >
+    >
 
 type CheckCustomKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig | null> =
-  C extends null ?
-    never
-    : (
-        keyof C extends K[keyof K] ? // check if there is a key that is not a default drf key
-            (CustomKey<D, K, key, Exclude<C, null>>) // there is a custom key inside the key config
-          : never
-      )
+    C extends null ?
+      never
+      : (
+          keyof C extends K[keyof K] ? // check if there is a key that is not a default drf key
+              (CustomKey<D, K, key, Exclude<C, null>>) // there is a custom key inside the key config
+            : never
+        )
 
 type CheckConfigKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig | null> =
     key extends keyof K ? // check if there is a FSKeyConfig
@@ -143,14 +143,15 @@ export interface Filter {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FilterHandler = (key: string, value: any, filter: any) => Array<Filter>
 
+export type FilterHandlers = Record<string, FilterHandler>
+
 /**
- *
+ * Configuration for the DRFAxiosMiddleware
+ * @param filterHandlers: A Record which contains for a filter the custom filter handler
  */
 export interface DRFAxiosConfig {
-
   /**
-   * A Record which contains for a filter the custom filter handler
-   */
-  filterHandlers?: Record<string, FilterHandler>
-
+     * A Record which contains for a filter the custom filter handler
+     */
+  filterHandlers?: FilterHandlers
 }
