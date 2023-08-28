@@ -25,6 +25,7 @@
 - 📦 CommonJS and ES Module support
 - ⚙️ Works with Axios and Django Rest Framework
 - 📝 Customizable
+- 📚 Well documented ([Docs](https://singularit-de.github.io/drf-axios-middleware/))
 
 ## Installation
 
@@ -171,4 +172,4 @@ api.get('/api/v1/users/', {filterSet: {id: {between: [1, 99]}}}).then((response)
 
 ## License
 
-[MIT License](./LICENSE) © 2019-PRESENT singularIT GmbH
+[MIT License](./LICENSE) © 2023-PRESENT singularIT GmbH
