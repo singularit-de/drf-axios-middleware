@@ -26,7 +26,7 @@ body:
     id: system-info
     attributes:
       label: System Info
-      description: Output of `npx envinfo --system --npmPackages '{vue,@singularit/*}' --binaries --browsers`
+      description: Output of `npx envinfo --system --npmPackages '{axios,@singularit/*}' --binaries --browsers`
       render: Shell
       placeholder: System, Binaries, Browsers
     validations:
