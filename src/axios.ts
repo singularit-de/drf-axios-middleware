@@ -4,4 +4,4 @@ declare module 'axios' {
   }
 }
 
-export {}
+export {} // needed to make this file a module
