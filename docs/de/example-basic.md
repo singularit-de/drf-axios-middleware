@@ -16,7 +16,7 @@ const DefaultDRFFilters = ['in', 'exact', 'lt', 'gt', 'lte', 'gte', 'startswith'
 ```
 
 ::: tip
-Wenn Sie benutzerdefinierte Operatoren verwenden möchten, lesen Sie [Customization](./de/example-customization.md).
+Wenn Sie benutzerdefinierte Operatoren verwenden möchten, lesen Sie [Customization](./example-customization.md).
 :::
 
 ```ts
