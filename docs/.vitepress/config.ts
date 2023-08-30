@@ -33,6 +33,7 @@ export default defineConfig({
       {
         text: 'Advanced',
         items: [
+          {text: 'Typescript', link: '/advanced-typescript'},
           {text: 'convertFilterSetConfig', link: '/convert-filter-set-config'},
         ],
       },
@@ -135,6 +136,7 @@ export default defineConfig({
           {
             text: 'Fortgeschritten',
             items: [
+              {text: 'Typescript', link: '/de/advanced-typescript'},
               {text: 'convertFilterSetConfig', link: '/de/convert-filter-set-config'},
             ],
           },
