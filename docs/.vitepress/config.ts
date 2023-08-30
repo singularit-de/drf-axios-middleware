@@ -97,11 +97,11 @@ export default defineConfig({
   locales: {
     root: {
       label: 'English',
-      lang: 'en',
+      lang: 'en-US',
     },
     de: {
       label: 'German',
-      lang: 'de',
+      lang: 'de-DE',
       themeConfig: {
         nav: [
           {text: 'Start', link: '/de'},
