@@ -120,7 +120,7 @@ export type FilterSetConfig<D = Record<any, any>, K extends FSKeyConfig<D> | nul
       : CheckConfigKeys<D, Exclude<K, null>, key, C> // check if key is inside the config
   ) | (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    D[key] extends (Record<any, any> | undefined) ? // check if the type of the key is a Record, so we add extended references
+    Extract<object, D[key]> extends (Record<any, any> | undefined) ? // check if the type of the key is a Record, so we add extended references
         (key extends keyof K ?
           FilterSetConfig<D[key], K[key]>
           : FilterSetConfig<D[key]>)
