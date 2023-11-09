@@ -12,6 +12,14 @@ interface Data {
   new?: boolean
 }
 
+test('Error when type of attribute is passed without filter', () => {
+  const simpleConfig: FilterSetConfig<Data> = {
+    // @ts-expect-error plain passing is not allowed
+    text: 'string',
+  }
+  expect(() => convertFilterSetConfig(simpleConfig)).toThrow('Cannot use \'in\' operator to search for \'value\' in string')
+})
+
 test('Error when attribute is not in data type', () => {
   const simpleConfig: FilterSetConfig<Data> = {
     // @ts-expect-error number is not part of data type
