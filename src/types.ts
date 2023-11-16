@@ -79,8 +79,14 @@ export type CustomKeyConfig = Record<any, any>
 }
 
 type AllowedFSKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig | null> =
-// we exclude the types from the custom config because they are defined there. If not they might allow wrong types
-    (Exclude<K[key], keyof C> extends (string | number | symbol) ? Partial<Record<Exclude<K[key], keyof C>, D[key]>> : never)
+    // we exclude the types from the custom config because they are defined there. If not they might allow wrong types.
+    (Exclude<K[key], keyof C> extends (string | number | symbol) ?
+      Partial<
+          Record< // record for allowed keys
+              Exclude<K[key], keyof C>, // exclude keys that are not part of the FSKeyConfig
+              FilterSet<D[key]>[K[key]]> // The type needs to be looked up in the FilterSet as in is not simply D[key]
+      >
+      : never)
 
 type ConfiguredCustomKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends CustomKeyConfig> =
     Extract<keyof C, K[key] extends (string | number | symbol) ? K[key] : never>
