@@ -36,7 +36,7 @@ export interface FilterSetAffix<F> extends NotExact, NotIn {
   endswith?: F
 }
 
-type FilterSetRange<T> =
+export type FilterSetRange<T> =
     (FilterSetRangeLT<T> & FilterSetRangeGTE<T>) | (FilterSetRangeLT<T> & FilterSetRangeGT<T>)
     | (FilterSetRangeLTE<T> & FilterSetRangeGTE<T>) | (FilterSetRangeLTE<T> & FilterSetRangeGT<T>)
     | (FilterSetRangeGT<T> & FilterSetRangeLTE<T>) | (FilterSetRangeGT<T> & FilterSetRangeLT<T>)
@@ -66,7 +66,7 @@ export interface FilterSetRangeGTE<T> extends FilterSetAffix<T> {
 /**
  * all FilterSets
  */
-type FilterSet<T> = FilterSetRange<T> | FilterSetExact<T> | FilterSetAffix<T> | FilterSetIn<T>
+export type FilterSet<T> = FilterSetRange<T> | FilterSetExact<T> | FilterSetAffix<T> | FilterSetIn<T>
 
 // Config to exclude certain filters and enable custom filters
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -116,10 +116,13 @@ type CheckConfigKeys<D, K extends FSKeyConfig<D>, key extends keyof D, C extends
         )
       : FilterSet<D[key]> // no config for the key so we take the default combinations
 
+// type for plain values unaffected by any filters
+export type FilterSetValue<K> = Record<'value', K>
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FilterSetConfig<D = Record<any, any>, K extends FSKeyConfig<D> | null = null, C extends CustomKeyConfig | null = null> = {
   [key in keyof D]:
-  {value: D[key]} // no filters apply
+  FilterSetValue<D[key]> // no filters apply
   | (
     K extends null ? // check if we have a config
       FilterSet<D[key]> // no config so we take the default combinations for each key
