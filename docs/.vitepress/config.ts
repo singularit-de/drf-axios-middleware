@@ -34,6 +34,7 @@ export default defineConfig({
         text: 'Advanced',
         items: [
           {text: 'Typescript', link: '/advanced-typescript'},
+          {text: 'Type Guards', link: '/advanced-typescript-guards'},
           {text: 'convertFilterSetConfig', link: '/convert-filter-set-config'},
         ],
       },
